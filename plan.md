@@ -35,20 +35,20 @@ Each step = one PR + one commit. Validate before moving to next step.
 - [x] Write claude.md
 - [x] Write gemini.md
 - [x] Write README.md
-- [ ] Initialize monorepo (pnpm workspaces + Python poetry)
-- [ ] Set up GitHub repository with branch protection rules
-- [ ] Configure Doppler project for secrets
-- [ ] Set up GitHub Actions basic CI skeleton
+- [x] Initialize monorepo (pnpm workspaces + Python poetry)
+- [x] Set up GitHub repository with branch protection rules
+- [x] Configure Doppler project for secrets
+- [x] Set up GitHub Actions basic CI skeleton
 
 **Commit:** `chore: initialize monorepo and documentation`
 
 ---
 
-### 🔲 Step 1 — Database Schema
-- [ ] Design and write Prisma schema (products, posts, commissions, pipeline_runs)
-- [ ] Run initial migration against Supabase dev
-- [ ] Write seed data for local development
-- [ ] Validate schema with DB diagram
+### ✅ Step 1 — Database Schema
+- [x] Design and write Prisma schema (products, posts, commissions, pipeline_runs)
+- [x] Run initial migration against Supabase dev
+- [x] Write seed data for local development
+- [x] Validate schema with DB diagram
 
 **Quality Gate:** `prisma validate` passes. ERD reviewed.
 **Commit:** `feat(db): initial schema — products, posts, commissions`
@@ -171,7 +171,7 @@ Each step = one PR + one commit. Validate before moving to next step.
 
 ## Current Focus
 
-**Step 0 — Foundation** (documentation phase complete, initializing monorepo next)
+**Step 2 — Shopee API Client (Python)** (Step 0 and Step 1 completed, starting Python API client next)
 
 ---
 
