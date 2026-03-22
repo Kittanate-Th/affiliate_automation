@@ -1,0 +1,33 @@
+cat > .gitignore << 'EOF'
+# Python
+__pycache__/
+*.pyc
+.venv/
+dist/
+*.egg-info/
+
+# Node
+node_modules/
+.next/
+dist/
+
+# Secrets (ห้าม commit เด็ดขาด)
+.env
+.env.local
+.env.*
+*.pem
+*.key
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+
+# Logs
+*.log
+EOF
+
+key_pass.txt
