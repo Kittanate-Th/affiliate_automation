@@ -1,0 +1,99 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("SUPABASE_URL")
+  directUrl = env("SUPABASE_SERVICE_ROLE_KEY") // Or direct connection string
+}
+
+enum PostStatus {
+  DRAFT
+  PUBLISHED
+  FAILED
+}
+
+enum CommissionStatus {
+  PENDING
+  CONFIRMED
+  PAID
+}
+
+enum JobStatus {
+  PENDING
+  SUCCESS
+  FAILED
+}
+
+enum JobType {
+  DISCOVERY
+  CONTENT_GEN
+  PUBLISH
+  COMMISSION_SYNC
+}
+
+model Product {
+  id              String   @id @default(uuid())
+  shopeeProductId String   @unique @map("shopee_product_id")
+  name            String
+  price           Float
+  commissionRate  Float    @map("commission_rate")
+  monthlySales    Int      @default(0) @map("monthly_sales")
+  productUrl      String   @map("product_url")
+  imageUrl        String?  @map("image_url")
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
+
+  posts Post[]
+
+  @@map("products")
+}
+
+model Post {
+  id           String     @id @default(uuid())
+  productId    String     @map("product_id")
+  content      String     @db.Text
+  generatedImg String?    @map("generated_image_url")
+  status       PostStatus @default(DRAFT)
+  platform     String     @default("facebook")
+  platformId   String?    @map("platform_id") // ID returned by Facebook after posting
+  publishedAt  DateTime?  @map("published_at")
+  createdAt    DateTime   @default(now()) @map("created_at")
+  updatedAt    DateTime   @updatedAt @map("updated_at")
+
+  product     Product      @relation(fields: [productId], references: [id])
+  commissions Commission[]
+
+  @@map("posts")
+}
+
+model Commission {
+  id            String           @id @default(uuid())
+  transactionId String           @unique @map("transaction_id")
+  postId        String?          @map("post_id") // Nullable for orphan commissions
+  amount        Float
+  status        CommissionStatus @default(PENDING)
+  rawPayload    Json             @map("raw_payload") // Store full Shopee API response
+  createdAt     DateTime         @default(now()) @map("created_at")
+  updatedAt     DateTime         @updatedAt @map("updated_at")
+
+  post Post? @relation(fields: [postId], references: [id])
+
+  @@map("commissions")
+}
+
+model PipelineRun {
+  id        String    @id @default(uuid())
+  jobId     String    @unique @map("job_id") // Derived from input hash
+  type      JobType
+  status    JobStatus @default(PENDING)
+  error     String?   @db.Text
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+
+  @@map("pipeline_runs")
+}
